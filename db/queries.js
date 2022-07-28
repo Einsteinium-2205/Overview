@@ -40,9 +40,20 @@ const findStylesById = (id) => (
     .catch((err) => console.log('error in DB: ', err))
 );
 
+const findPhotosByStyleid = (styleId) => (
+  promisedClient
+    .query(`SELECT * FROM photo WHERE styleid = ${styleId}`)
+    .then((photoData) => {
+      console.log(`successfully retrieved photos for Style: ${styleId}`);
+      // console.log('photoData: ', photoData.rows);
+      return photoData.rows;
+    })
+);
+
 module.exports = {
   findAllProduct,
   findProductById,
   findFeatureById,
   findStylesById,
+  findPhotosByStyleid,
 };

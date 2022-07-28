@@ -8,17 +8,17 @@ const client = new Client({
   port: process.env.DB_PORT,
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
-})
+});
 
 const connectDb = async () => {
   try {
     await client.connect();
-    console.log('DB connected!! 👌')
+    console.log('DB connected!! 👌');
     // await client.end();
-  } catch(err) {
+  } catch (err) {
     console.log('error in db connection: ', err);
   }
-}
+};
 
 const db = Promise.promisifyAll(connectDb, { multiArgs: true });
 const promisedClient = Promise.promisifyAll(client);
@@ -33,8 +33,7 @@ db()
         description VARCHAR(600),
         category VARCHAR(255) NOT NULL,
         default_price VARCHAR(255) NOT NULL
-      );`
-    );
+      );`);
 
     promisedClient.query(`
       CREATE TABLE IF NOT EXISTS feature (
@@ -43,8 +42,7 @@ db()
         feature VARCHAR(50) NOT NULL,
         value VARCHAR(50) NOT NULL,
         FOREIGN KEY (product_id) REFERENCES product (id)
-      );`
-    );
+      );`);
     promisedClient.query(`
       CREATE TABLE IF NOT EXISTS style (
         id INT NOT NULL PRIMARY KEY,
@@ -54,8 +52,7 @@ db()
         original_price VARCHAR(255) NOT NULL,
         default_style VARCHAR(255) NOT NULL,
         FOREIGN KEY (productId) REFERENCES product (id)
-      );`
-    );
+      );`);
     promisedClient.query(`
       CREATE TABLE IF NOT EXISTS sku (
         id INT NOT NULL PRIMARY KEY,
@@ -63,8 +60,7 @@ db()
         size VARCHAR(255) NOT NULL,
         quantity VARCHAR(255) NOT NULL,
         FOREIGN KEY (styleId) REFERENCES style (id)
-      );`
-    );
+      );`);
     promisedClient.query(`
       CREATE TABLE IF NOT EXISTS photo (
         id INT NOT NULL PRIMARY KEY,
@@ -72,52 +68,63 @@ db()
         url VARCHAR(99999) NOT NULL,
         thumbnail_url VARCHAR(99999) NOT NULL,
         FOREIGN KEY (styleId) REFERENCES style (id)
-      );`
-    );
+      );`);
     promisedClient.query(`
       CREATE TABLE IF NOT EXISTS related (
         id INT NOT NULL PRIMARY KEY,
         current_product_id INT NOT NULL,
         related_product_id INT NOT NULL,
         FOREIGN KEY (current_product_id) REFERENCES product (id)
-      );`
-    );
+      );`);
   })
   // .then(() => console.log('tables has been created!'))
-  .catch((err) => console.log('error: ', err))
+  .catch((err) => console.log('error: ', err));
 
-  // =================== Queries ====================
-  const findAllProduct = () => {
-    return promisedClient.query(`
-      SELECT * FROM product
-    `)
-      .then((productData) => {
-        console.log('successfully retrieved all products!');
-        return productData;
-      })
-      .catch((err) => console.log('error in DB: ', err));
-  }
-  const findProductById = (id) => {
-    return promisedClient.query(`
-      SELECT * FROM product
-      WHERE id = ${id}
-    `)
-      .then((productData) => {
-        console.log(`successfully retrieved product with id:${id}`);
-        return productData.rows[0];
-      })
-      .catch((err) => console.log('error in DB: ', err));
-  }
-  const findFeatureById = (id) => {
-    return promisedClient.query(`
-      SELECT * FROM feature
-      WHERE product_id = ${id}
-    `)
-      .then((featureData) => {
-        console.log(`successfully retrieved features with id:${id}`);
-        return featureData.rows;
-      })
-      .catch((err) => console.log('error in DB: ', err));
-  }
+// =================== Queries ====================
+// const findAllProduct = () => (
+//   promisedClient
+//     .query('SELECT * FROM product')
+//     .then((productData) => {
+//       console.log('successfully retrieved all products!');
+//       return productData.rows;
+//     })
+//     .catch((err) => console.log('error in DB: ', err))
+// );
 
-module.exports = { findAllProduct, findProductById, findFeatureById };
+// const findProductById = (id) => (
+//   promisedClient
+//     .query(`SELECT * FROM product WHERE id = ${id}`)
+//     .then((productData) => {
+//       console.log(`successfully retrieved product with id:${id}`);
+//       return productData.rows[0];
+//     })
+//     .catch((err) => console.log('error in DB: ', err))
+// );
+
+// const findFeatureById = (id) => (
+//   promisedClient
+//     .query(`SELECT * FROM feature WHERE product_id = ${id}`)
+//     .then((featureData) => {
+//       console.log(`successfully retrieved features with id:${id}`);
+//       return featureData.rows;
+//     })
+//     .catch((err) => console.log('error in DB: ', err))
+// );
+
+// const findStylesById = (id) => (
+//   promisedClient
+//     .query(`SELECT * FROM feature WHERE product_id = ${id}`)
+//     .then((featureData) => {
+//       console.log(`successfully retrieved features with id:${id}`);
+//       return featureData.rows;
+//     })
+//     .catch((err) => console.log('error in DB: ', err))
+// );
+
+module.exports = {
+  promisedClient,
+  // findAllProduct,
+  // findProductById,
+  // findFeatureById,
+  // findStylesById,
+};

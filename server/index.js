@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const { getAllProduct, getProductById } = require('./helpers/getProduct');
+const { getAllProduct, getProductById, getStyleById } = require('./helpers/getProduct');
 
 const app = express();
 app.use(express.json());
@@ -14,7 +14,7 @@ app.get('/products/:id', (req, res) => {
   getProductById(req, res);
 });
 app.get('/products/:id/styles', (req, res) => {
-
+  getStyleById(req, res);
 });
 app.get('/products/:id/related', (req, res) => {
 

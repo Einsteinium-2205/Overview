@@ -13,8 +13,6 @@ const client = new Client({
 const connectDb = async () => {
   try {
     await client.connect();
-    console.log('DB connected!! 👌');
-    // await client.end();
   } catch (err) {
     console.log('error in db connection: ', err);
   }
@@ -48,7 +46,7 @@ db()
         id INT NOT NULL PRIMARY KEY,
         productId INT NOT NULL,
         name VARCHAR(255) NOT NULL,
-        sale_price VARCHAR(255) NOT NULL,
+        sale_price VARCHAR(255),
         original_price VARCHAR(255) NOT NULL,
         default_style VARCHAR(255) NOT NULL,
         FOREIGN KEY (productId) REFERENCES product (id)
@@ -58,7 +56,7 @@ db()
         id INT NOT NULL PRIMARY KEY,
         styleId INT NOT NULL,
         size VARCHAR(255) NOT NULL,
-        quantity VARCHAR(255) NOT NULL,
+        quantity INT NOT NULL,
         FOREIGN KEY (styleId) REFERENCES style (id)
       );`);
     promisedClient.query(`
@@ -77,7 +75,14 @@ db()
         FOREIGN KEY (current_product_id) REFERENCES product (id)
       );`);
   })
-  // .then(() => console.log('tables has been created!'))
+  .then(() => {
+    // clean & transform data
+    promisedClient.query(`
+      UPDATE style SET sale_price = REPLACE(
+        sale_price, 'null', null
+    );`);
+  })
+  .then(() => console.log('DB connected!! 👌'))
   .catch((err) => console.log('error: ', err));
 
 module.exports = { promisedClient };

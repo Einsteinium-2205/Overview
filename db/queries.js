@@ -32,10 +32,10 @@ const findFeatureById = (id) => (
 
 const findStylesById = (id) => (
   promisedClient
-    .query(`SELECT * FROM feature WHERE product_id = ${id}`)
-    .then((featureData) => {
-      console.log(`successfully retrieved features with id:${id}`);
-      return featureData.rows;
+    .query(`SELECT * FROM style WHERE productId = ${id}`)
+    .then((styleData) => {
+      console.log(`successfully retrieved styles with id:${id}`);
+      return styleData.rows;
     })
     .catch((err) => console.log('error in DB: ', err))
 );

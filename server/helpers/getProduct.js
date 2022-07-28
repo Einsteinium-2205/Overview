@@ -2,6 +2,7 @@ const {
   findAllProduct,
   findProductById,
   findFeatureById,
+  findStylesById,
 } = require('../../db/queries');
 
 const getAllProduct = (req, res) => {
@@ -30,4 +31,15 @@ const getProductById = (req, res) => {
     });
 };
 
-module.exports = { getAllProduct, getProductById };
+const getStyleById = (req, res) => {
+  const id = req.url.slice(10, -7);
+  // console.log('req url: ', req.url.slice(10, -7));
+  findStylesById(id)
+    .then((styleData) => res.status(200).send(styleData))
+    .catch((err) => {
+      res.status(500).send(err);
+      console.log('error in getStyleById: ', err);
+    });
+};
+
+module.exports = { getAllProduct, getProductById, getStyleById };

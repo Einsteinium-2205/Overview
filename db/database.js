@@ -83,25 +83,41 @@ db()
       );`
     );
   })
-  .then(() => console.log('tables has been created!'))
+  // .then(() => console.log('tables has been created!'))
   .catch((err) => console.log('error: ', err))
 
   // =================== Queries ====================
-  const getAllProduct = () => {
+  const findAllProduct = () => {
     return promisedClient.query(`
       SELECT * FROM product
     `)
-      .then(() => console.log('successfully retrieved all products!'))
-      .catch((err) => console.log('error when adding to product table: ', err));
+      .then((productData) => {
+        console.log('successfully retrieved all products!');
+        return productData;
+      })
+      .catch((err) => console.log('error in DB: ', err));
   }
-  const getProductById = (id) => {
+  const findProductById = (id) => {
     return promisedClient.query(`
       SELECT * FROM product
       WHERE id = ${id}
     `)
-      .then(() => console.log(`successfully retrieved product with id:${id}`))
-      .catch((err) => console.log('error when adding to product table: ', err));
+      .then((productData) => {
+        console.log(`successfully retrieved product with id:${id}`);
+        return productData.rows[0];
+      })
+      .catch((err) => console.log('error in DB: ', err));
+  }
+  const findFeatureById = (id) => {
+    return promisedClient.query(`
+      SELECT * FROM feature
+      WHERE product_id = ${id}
+    `)
+      .then((featureData) => {
+        console.log(`successfully retrieved features with id:${id}`);
+        return featureData.rows;
+      })
+      .catch((err) => console.log('error in DB: ', err));
   }
 
-
-module.exports = { getAllProduct, getProductById };
+module.exports = { findAllProduct, findProductById, findFeatureById };

@@ -75,20 +75,11 @@ db()
       );`
     );
     promisedClient.query(`
-      CREATE TABLE IF NOT EXISTS review (
+      CREATE TABLE IF NOT EXISTS related (
         id INT NOT NULL PRIMARY KEY,
-        product_id INT NOT NULL,
-        rating INT NOT NULL,
-        date VARCHAR(255) NOT NULL,
-        summary VARCHAR(2000) NOT NULL,
-        body VARCHAR(99999) NOT NULL,
-        recommend BOOLEAN NOT NULL,
-        reported BOOLEAN NOT NULL,
-        reviewer_name VARCHAR(600) NOT NULL,
-        reviewer_email VARCHAR(2000) NOT NULL,
-        response VARCHAR(600),
-        helpfulness INT NOT NULL,
-        FOREIGN KEY (product_id) REFERENCES product (id)
+        current_product_id INT NOT NULL,
+        related_product_id INT NOT NULL,
+        FOREIGN KEY (current_product_id) REFERENCES product (id)
       );`
     );
   })

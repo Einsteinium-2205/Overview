@@ -86,14 +86,22 @@ db()
   .then(() => console.log('tables has been created!'))
   .catch((err) => console.log('error: ', err))
 
-  const addToProduct = (obj) => {
+  // =================== Queries ====================
+  const getAllProduct = () => {
     return promisedClient.query(`
-      INSERT INTO product (product_id, name, slogan, description, category, default_price)
-      VALUES (${obj.product_id}, ${obj.name}, ${obj.slogan}, ${obj.description}, ${obj.category}, ${obj.default_price});
+      SELECT * FROM product
     `)
-      .then(() => console.log('inserted to product table ✅'))
+      .then(() => console.log('successfully retrieved all products!'))
+      .catch((err) => console.log('error when adding to product table: ', err));
+  }
+  const getProductById = (id) => {
+    return promisedClient.query(`
+      SELECT * FROM product
+      WHERE id = ${id}
+    `)
+      .then(() => console.log(`successfully retrieved product with id:${id}`))
       .catch((err) => console.log('error when adding to product table: ', err));
   }
 
 
-module.exports = { addToProduct };
+module.exports = { getAllProduct, getProductById };

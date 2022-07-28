@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 // const path = require('path');
-const { addToProduct } = require('../db/database');
+const { getAllProduct } = require('../db/database');
 
 const app = express();
 app.use(express.json());

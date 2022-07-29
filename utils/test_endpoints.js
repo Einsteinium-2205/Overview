@@ -9,7 +9,7 @@ export const options = {
   duration: '15s',
 };
 
-const url = 'http://localhost:3000/products/';
+const url = 'http://localhost:3000/products/1/related';
 
 export default function test() {
   const res = http.get(url);

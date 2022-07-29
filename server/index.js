@@ -1,6 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const { getAllProduct, getProductById, getStyleById } = require('./helpers/getProduct');
+const {
+  getAllProduct,
+  getProductById,
+  getStyleById,
+  getRelatedById,
+} = require('./helpers');
 
 const app = express();
 app.use(express.json());
@@ -17,7 +22,7 @@ app.get('/products/:id/styles', (req, res) => {
   getStyleById(req, res);
 });
 app.get('/products/:id/related', (req, res) => {
-
+  getRelatedById(req, res);
 });
 
 const port = process.env.PORT || 3000;

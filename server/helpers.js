@@ -5,7 +5,8 @@ const {
   findStylesById,
   findPhotosByStyleid,
   findSkusByStyleid,
-} = require('../../db/queries');
+  findRelatedByProductId,
+} = require('../db/queries');
 
 const getAllProduct = (req, res) => {
   findAllProduct()
@@ -41,7 +42,7 @@ const getStyleById = (req, res) => {
       const styleObj = {};
       styleObj.product_id = styleData[0].productid;
       styleObj.results = styleData;
-      // return styleObj;
+
       const photoPromises = styleObj.results.map((style) => {
         style.photos = null;
         style.skus = null;
@@ -49,27 +50,17 @@ const getStyleById = (req, res) => {
         return findPhotosByStyleid(style.id)
           .then((photoData) => {
             style.photos = photoData;
-          // })
-          // .then(() => {
-            // findSkusByStyleid(style.id)
-            //   .then((skuData) => {
-            //     // console.log('sku Data: ', skuData)
-            //     style.skus = skuData;
-            //   })
-            //   .catch((err) => console.log('error in findSkus: ', err));
           })
           .catch((err) => console.log(err));
       });
+
       const skuPromises = styleObj.results.map((style) => (
         findSkusByStyleid(style.id)
           .then((skuData) => {
-            // console.log('sku Data: ', skuData);
             style.skus = skuData;
           })
           .catch((err) => console.log('error in findPhotos: ', err))
       ));
-
-      // photoPromises.push(skuPromises);
 
       const addPhotos = Promise.all(photoPromises);
       const addSkus = Promise.all(skuPromises);
@@ -87,4 +78,22 @@ const getStyleById = (req, res) => {
     });
 };
 
-module.exports = { getAllProduct, getProductById, getStyleById };
+const getRelatedById = (req, res) => {
+  const id = req.url.slice(10, -8);
+
+  findRelatedByProductId(id)
+    .then((relatedData) => {
+      const relatedArr = relatedData.map((item) => (
+        item.related_product_id
+      ));
+      res.status(200).send(relatedArr);
+    })
+    .catch((err) => console.log('error in find related: ', err));
+};
+
+module.exports = {
+  getAllProduct,
+  getProductById,
+  getStyleById,
+  getRelatedById,
+};

@@ -58,6 +58,15 @@ const findSkusByStyleid = (styleId) => (
     })
 );
 
+const findRelatedByProductId = (id) => (
+  promisedClient
+    .query(`SELECT * FROM related WHERE current_product_id = ${id}`)
+    .then((relatedData) => {
+      console.log(`successfully retrieved related for product: ${id}`);
+      return relatedData.rows;
+    })
+);
+
 module.exports = {
   findAllProduct,
   findProductById,
@@ -65,4 +74,5 @@ module.exports = {
   findStylesById,
   findPhotosByStyleid,
   findSkusByStyleid,
+  findRelatedByProductId,
 };

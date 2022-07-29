@@ -45,8 +45,16 @@ const findPhotosByStyleid = (styleId) => (
     .query(`SELECT * FROM photo WHERE styleid = ${styleId}`)
     .then((photoData) => {
       console.log(`successfully retrieved photos for Style: ${styleId}`);
-      // console.log('photoData: ', photoData.rows);
       return photoData.rows;
+    })
+);
+
+const findSkusByStyleid = (styleId) => (
+  promisedClient
+    .query(`SELECT * FROM sku WHERE styleid = ${styleId}`)
+    .then((skuData) => {
+      console.log(`successfully retrieved skus for Style: ${styleId}`);
+      return skuData.rows;
     })
 );
 
@@ -56,4 +64,5 @@ module.exports = {
   findFeatureById,
   findStylesById,
   findPhotosByStyleid,
+  findSkusByStyleid,
 };

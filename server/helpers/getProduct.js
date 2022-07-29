@@ -4,6 +4,7 @@ const {
   findFeatureById,
   findStylesById,
   findPhotosByStyleid,
+  findSkusByStyleid,
 } = require('../../db/queries');
 
 const getAllProduct = (req, res) => {
@@ -41,24 +42,39 @@ const getStyleById = (req, res) => {
       styleObj.product_id = styleData[0].productid;
       styleObj.results = styleData;
       // return styleObj;
-      const photoPromises = styleObj.results.map((style) => (
-        findPhotosByStyleid(style.id)
+      const photoPromises = styleObj.results.map((style) => {
+        style.photos = null;
+        style.skus = null;
+
+        return findPhotosByStyleid(style.id)
           .then((photoData) => {
             style.photos = photoData;
           })
-          .catch((err) => console.log('error in findPhotos: ', err))
-      ));
+          // .then(() => {
+          //   findSkusByStyleid(style.id)
+          //     .then((skuData) => {
+          //       // console.log('sku Data: ', skuData)
+          //       style.skus = skuData;
+          //     })
+          //     .catch((err) => console.log('error in findSkus: ', err));
+          //     // })
+          //     // .catch((err) => console.log('error in findPhotos: ', err))
+          // })
+          .catch((err) => console.log('error: ', err));
+      });
+      // const skuPromises = styleObj.results.map((style) => (
+      //   findSkusByStyleid(style.id)
+      //     .then((skuData) => {
+      //       // console.log('sku Data: ', skuData);
+      //       style.skus = skuData;
+      //     })
+      //     .catch((err) => console.log('error in findPhotos: ', err))
+      // ));
+
+      // photoPromises.concat(skuPromises);
+
       const result = Promise.all(photoPromises);
       return result.then(() => (styleObj));
-
-      // findPhotosByStyleid(styleData[0].id)
-      //   .then((photoData) => {
-      //     styleObj[0].photos = photoData;
-      //     // console.log('styleObj: ', styleObj);
-
-      //     return styleObj;
-      //   })
-      //   .then((finalStyleObj) => res.status(200).send(finalStyleObj));
     })
     .then((finalStyleObj) => res.status(200).send(finalStyleObj))
     .catch((err) => {

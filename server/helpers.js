@@ -25,7 +25,7 @@ const getProductById = (req, res) => {
       findFeatureById(id).then((featureData) => {
         const productObj = productData;
         productObj.features = featureData;
-        res.status(200).send(productData);
+        res.status(200).send(productObj);
       });
     })
     .catch((err) => {

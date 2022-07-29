@@ -21,5 +21,6 @@ module.exports = {
     'no-undef': 0,
     'no-console': 0,
     'no-param-reassign': 0,
+    'import/no-unresolved': 0,
   },
 };

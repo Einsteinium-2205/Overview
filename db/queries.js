@@ -12,7 +12,7 @@ const findAllProduct = () => (
 
 const findProductById = (id) => (
   promisedClient
-    .query(`SELECT * FROM product WHERE id = ${id}`)
+    .query(`SELECT * FROM product WHERE id = ${id};`)
     .then((productData) => {
       console.log(`successfully retrieved product with id:${id}`);
       return productData.rows[0];

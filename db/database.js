@@ -81,6 +81,20 @@ db()
       UPDATE style SET sale_price = REPLACE(
         sale_price, 'null', null
     );`);
+
+    // create indexes
+    promisedClient.query(`
+      CREATE INDEX IF NOT EXISTS IX_product_id ON feature (product_id ASC)
+    `);
+    promisedClient.query(`
+      CREATE INDEX IF NOT EXISTS IX_styleId ON sku (styleid)
+    `);
+    promisedClient.query(`
+      CREATE INDEX IF NOT EXISTS IX_styleId_tblphoto ON photo (styleid)
+    `);
+    promisedClient.query(`
+      CREATE INDEX IF NOT EXISTS IX_current_product_id ON related (current_product_id)
+    `);
   })
   .then(() => console.log('DB connected!! 👌'))
   .catch((err) => console.log('error: ', err));

@@ -49,32 +49,36 @@ const getStyleById = (req, res) => {
         return findPhotosByStyleid(style.id)
           .then((photoData) => {
             style.photos = photoData;
-          })
-          // .then(() => {
-          //   findSkusByStyleid(style.id)
-          //     .then((skuData) => {
-          //       // console.log('sku Data: ', skuData)
-          //       style.skus = skuData;
-          //     })
-          //     .catch((err) => console.log('error in findSkus: ', err));
-          //     // })
-          //     // .catch((err) => console.log('error in findPhotos: ', err))
           // })
-          .catch((err) => console.log('error: ', err));
+          // .then(() => {
+            // findSkusByStyleid(style.id)
+            //   .then((skuData) => {
+            //     // console.log('sku Data: ', skuData)
+            //     style.skus = skuData;
+            //   })
+            //   .catch((err) => console.log('error in findSkus: ', err));
+          })
+          .catch((err) => console.log(err));
       });
-      // const skuPromises = styleObj.results.map((style) => (
-      //   findSkusByStyleid(style.id)
-      //     .then((skuData) => {
-      //       // console.log('sku Data: ', skuData);
-      //       style.skus = skuData;
-      //     })
-      //     .catch((err) => console.log('error in findPhotos: ', err))
-      // ));
+      const skuPromises = styleObj.results.map((style) => (
+        findSkusByStyleid(style.id)
+          .then((skuData) => {
+            // console.log('sku Data: ', skuData);
+            style.skus = skuData;
+          })
+          .catch((err) => console.log('error in findPhotos: ', err))
+      ));
 
-      // photoPromises.concat(skuPromises);
+      // photoPromises.push(skuPromises);
 
-      const result = Promise.all(photoPromises);
-      return result.then(() => (styleObj));
+      const addPhotos = Promise.all(photoPromises);
+      const addSkus = Promise.all(skuPromises);
+
+      return addPhotos.then(() => (
+        addSkus
+          .then(() => (styleObj))
+          .catch((err) => console.log('err in helpers: ', err))
+      ));
     })
     .then((finalStyleObj) => res.status(200).send(finalStyleObj))
     .catch((err) => {

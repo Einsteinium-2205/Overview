@@ -2,19 +2,40 @@ const { promisedClient } = require('./database');
 
 const findAllProduct = () => (
   promisedClient
-    .query('SELECT * FROM product')
-    .then((productData) => {
-      console.log('successfully retrieved all products!');
-      return productData.rows;
-    })
+    // .query('SELECT * FROM product')
+    // .then((productData) => (
+    //   // console.log('successfully retrieved all products!');
+    //   productData.rows
+    // ))
+    .query('SELECT json_agg("product") FROM product')
+    .then((productData) => (
+      productData.rows[0].json_agg
+    ))
     .catch((err) => console.log('error in DB: ', err))
 );
 
 const findProductById = (id) => (
   promisedClient
     .query(`SELECT * FROM product WHERE id = ${id};`)
+    .then((productData) => (
+      // console.log(`successfully retrieved product with id:${id}`);
+      productData.rows[0]
+    ))
+    .catch((err) => console.log('error in DB: ', err))
+);
+const findProductById_agg = (id) => (
+  promisedClient
+    .query(`
+      SELECT json_agg(pf)
+        FROM (
+          SELECT *, (
+            SELECT * FROM features WHERE product_feature.product_id = ${id}
+          ) features
+        FROM product_feature
+      ) pf
+    ;`)
     .then((productData) => {
-      console.log(`successfully retrieved product with id:${id}`);
+      console.log('product data in agg: ', productData);
       return productData.rows[0];
     })
     .catch((err) => console.log('error in DB: ', err))
@@ -23,48 +44,48 @@ const findProductById = (id) => (
 const findFeatureById = (id) => (
   promisedClient
     .query(`SELECT * FROM feature WHERE product_id = ${id}`)
-    .then((featureData) => {
-      console.log(`successfully retrieved features with id:${id}`);
-      return featureData.rows;
-    })
+    .then((featureData) => (
+      // console.log(`successfully retrieved features with id:${id}`);
+      featureData.rows
+    ))
     .catch((err) => console.log('error in DB: ', err))
 );
 
 const findStylesById = (id) => (
   promisedClient
     .query(`SELECT * FROM style WHERE productId = ${id}`)
-    .then((styleData) => {
-      console.log(`successfully retrieved styles with id:${id}`);
-      return styleData.rows;
-    })
+    .then((styleData) => (
+      // console.log(`successfully retrieved styles with id:${id}`);
+      styleData.rows
+    ))
     .catch((err) => console.log('error in DB: ', err))
 );
 
 const findPhotosByStyleid = (styleId) => (
   promisedClient
     .query(`SELECT * FROM photo WHERE styleid = ${styleId}`)
-    .then((photoData) => {
-      console.log(`successfully retrieved photos for Style: ${styleId}`);
-      return photoData.rows;
-    })
+    .then((photoData) => (
+      // console.log(`successfully retrieved photos for Style: ${styleId}`);
+      photoData.rows
+    ))
 );
 
 const findSkusByStyleid = (styleId) => (
   promisedClient
     .query(`SELECT * FROM sku WHERE styleid = ${styleId}`)
-    .then((skuData) => {
-      console.log(`successfully retrieved skus for Style: ${styleId}`);
-      return skuData.rows;
-    })
+    .then((skuData) => (
+      // console.log(`successfully retrieved skus for Style: ${styleId}`);
+      skuData.rows
+    ))
 );
 
 const findRelatedByProductId = (id) => (
   promisedClient
     .query(`SELECT * FROM related WHERE current_product_id = ${id}`)
-    .then((relatedData) => {
-      console.log(`successfully retrieved related for product: ${id}`);
-      return relatedData.rows;
-    })
+    .then((relatedData) => (
+      // console.log(`successfully retrieved related for product: ${id}`);
+      relatedData.rows
+    ))
 );
 
 module.exports = {
@@ -75,4 +96,5 @@ module.exports = {
   findPhotosByStyleid,
   findSkusByStyleid,
   findRelatedByProductId,
+  findProductById_agg,
 };

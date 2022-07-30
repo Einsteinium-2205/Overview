@@ -6,6 +6,7 @@ const {
   findPhotosByStyleid,
   findSkusByStyleid,
   findRelatedByProductId,
+  findProductById_agg,
 } = require('../db/queries');
 
 const getAllProduct = (req, res) => {
@@ -28,6 +29,8 @@ const getProductById = (req, res) => {
         res.status(200).send(productObj);
       });
     })
+  // findProductById_agg(id)
+  //   .then((productaData) => res.status(200).send(productaData))
     .catch((err) => {
       res.status(500).send(err);
       console.log('error in getProductById: ', err);

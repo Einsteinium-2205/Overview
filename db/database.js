@@ -81,10 +81,23 @@ db()
       UPDATE style SET sale_price = REPLACE(
         sale_price, 'null', null
     );`);
+    // create join tables
+    promisedClient.query(`
+      CREATE TABLE IF NOT EXISTS product_feature
+      AS (
+        SELECT
+          product.id, product.name, product.slogan, product.description,
+          product.category, product.default_price, feature.feature, feature.value
+        FROM product
+        LEFT JOIN feature ON product.id = feature.product_id
+      );`);
 
     // create indexes
     promisedClient.query(`
       CREATE INDEX IF NOT EXISTS IX_product_id ON feature (product_id ASC)
+    `);
+    promisedClient.query(`
+      CREATE INDEX IF NOT EXISTS IX_productId ON style (productId ASC)
     `);
     promisedClient.query(`
       CREATE INDEX IF NOT EXISTS IX_styleId ON sku (styleid)

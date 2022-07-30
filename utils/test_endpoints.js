@@ -9,11 +9,15 @@ export const options = {
   duration: '15s',
 };
 
-const url = 'http://localhost:3000/products/777/related';
+// ========== url to test 4 endpoints ============
+const url = 'http://localhost:3000/products/';
+// const url = 'http://localhost:3000/products/1229';
+// const url = 'http://localhost:3000/products/12/styles';
+// const url = 'http://localhost:3000/products/6/related';
 
 export default function test() {
   const res = http.get(url);
-  sleep(1);
+  sleep(0.1);
   check(res, {
     'is status 200': (r) => r.status === 200,
     'transaction time < 200ms': (r) => r.timings.duration < 200,

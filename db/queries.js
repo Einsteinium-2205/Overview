@@ -36,9 +36,20 @@ const findFeatureById = (id) => (
 
 const findProductFeatureById = (id) => (
   promisedClient
+    // .query(`
+    //   SELECT * FROM product_feature WHERE id = ${id}
+    // ;`)
     .query(`
-      SELECT * FROM product_feature WHERE id = ${id}
-    ;`)
+      SELECT p.*,
+        json_agg(json_build_object(
+          'feature', f.feature,
+          'value', f.value
+        )) features
+        FROM product p
+        LEFT JOIN feature f ON f.product_id = p.id
+        WHERE p.id = ${id}
+        GROUP BY p.id
+      ;`)
     .then((productData) => (
       productData.rows[0]
     ))

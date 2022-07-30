@@ -81,19 +81,6 @@ db()
       UPDATE style SET sale_price = REPLACE(
         sale_price, 'null', null
     );`);
-    // create join tables
-    promisedClient.query(`
-      CREATE TABLE IF NOT EXISTS product_feature
-      AS (
-        SELECT p.*,
-        json_agg(json_build_object(
-          'feature', f.feature,
-          'value', f.value
-        )) features
-        FROM product p
-        LEFT JOIN feature f ON f.product_id = p.id
-        GROUP BY p.id
-      );`);
 
     // create indexes
     promisedClient.query(`

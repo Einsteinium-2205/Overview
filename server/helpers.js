@@ -6,7 +6,7 @@ const {
   findPhotosByStyleid,
   findSkusByStyleid,
   findRelatedByProductId,
-  findProductById_agg,
+  findProductFeatureById,
 } = require('../db/queries');
 
 const getAllProduct = (req, res) => {
@@ -21,16 +21,16 @@ const getAllProduct = (req, res) => {
 const getProductById = (req, res) => {
   const id = req.url.slice(10);
 
-  findProductById(id)
-    .then((productData) => {
-      findFeatureById(id).then((featureData) => {
-        const productObj = productData;
-        productObj.features = featureData;
-        res.status(200).send(productObj);
-      });
-    })
-  // findProductById_agg(id)
-  //   .then((productaData) => res.status(200).send(productaData))
+  // findProductById(id)
+  //   .then((productData) => {
+  //     findFeatureById(id).then((featureData) => {
+  //       const productObj = productData;
+  //       productObj.features = featureData;
+  //       res.status(200).send(productObj);
+  //     });
+  //   })
+  findProductFeatureById(id)
+    .then((productaData) => res.status(200).send(productaData))
     .catch((err) => {
       res.status(500).send(err);
       console.log('error in getProductById: ', err);

@@ -23,23 +23,6 @@ const findProductById = (id) => (
     ))
     .catch((err) => console.log('error in DB: ', err))
 );
-const findProductById_agg = (id) => (
-  promisedClient
-    .query(`
-      SELECT json_agg(pf)
-        FROM (
-          SELECT *, (
-            SELECT * FROM features WHERE product_feature.product_id = ${id}
-          ) features
-        FROM product_feature
-      ) pf
-    ;`)
-    .then((productData) => {
-      console.log('product data in agg: ', productData);
-      return productData.rows[0];
-    })
-    .catch((err) => console.log('error in DB: ', err))
-);
 
 const findFeatureById = (id) => (
   promisedClient
@@ -47,6 +30,17 @@ const findFeatureById = (id) => (
     .then((featureData) => (
       // console.log(`successfully retrieved features with id:${id}`);
       featureData.rows
+    ))
+    .catch((err) => console.log('error in DB: ', err))
+);
+
+const findProductFeatureById = (id) => (
+  promisedClient
+    .query(`
+      SELECT * FROM product_feature WHERE id = ${id}
+    ;`)
+    .then((productData) => (
+      productData.rows[0]
     ))
     .catch((err) => console.log('error in DB: ', err))
 );
@@ -96,5 +90,5 @@ module.exports = {
   findPhotosByStyleid,
   findSkusByStyleid,
   findRelatedByProductId,
-  findProductById_agg,
+  findProductFeatureById,
 };

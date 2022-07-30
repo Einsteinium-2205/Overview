@@ -85,11 +85,14 @@ db()
     promisedClient.query(`
       CREATE TABLE IF NOT EXISTS product_feature
       AS (
-        SELECT
-          product.id, product.name, product.slogan, product.description,
-          product.category, product.default_price, feature.feature, feature.value
-        FROM product
-        LEFT JOIN feature ON product.id = feature.product_id
+        SELECT p.*,
+        json_agg(json_build_object(
+          'feature', f.feature,
+          'value', f.value
+        )) features
+        FROM product p
+        LEFT JOIN feature f ON f.product_id = p.id
+        GROUP BY p.id
       );`);
 
     // create indexes

@@ -1,11 +1,11 @@
 const {
   findAllProduct,
-  findProductById,
-  findFeatureById,
-  findProductFeatureById,
-  findStylesById,
-  findPhotosByStyleid,
-  findSkusByStyleid,
+  // findProductById,
+  // findFeatureById,
+  OneQueryFindProductById,
+  // findStylesById,
+  // findPhotosByStyleid,
+  // findSkusByStyleid,
   oneQueryfindStylesById,
   findRelatedByProductId,
 } = require('../db/queries');
@@ -30,7 +30,7 @@ const getProductById = (req, res) => {
   //       res.status(200).send(productObj);
   //     });
   //   })
-  findProductFeatureById(id)
+  OneQueryFindProductById(id)
     .then((productaData) => res.status(200).send(productaData))
     .catch((err) => {
       res.status(500).send(err);

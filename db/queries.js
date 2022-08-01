@@ -8,33 +8,25 @@ const findAllProduct = () => (
     //   productData.rows
     // ))
     .query('SELECT json_agg("product") FROM product')
-    .then((productData) => (
-      productData.rows[0].json_agg
-    ))
+    .then((productData) => productData.rows[0].json_agg)
     .catch((err) => console.log('error in DB: ', err))
 );
 
 const findProductById = (id) => (
   promisedClient
     .query(`SELECT * FROM product WHERE id = ${id};`)
-    .then((productData) => (
-      // console.log(`successfully retrieved product with id:${id}`);
-      productData.rows[0]
-    ))
+    .then((productData) => productData.rows[0])
     .catch((err) => console.log('error in DB: ', err))
 );
 
 const findFeatureById = (id) => (
   promisedClient
     .query(`SELECT * FROM feature WHERE product_id = ${id}`)
-    .then((featureData) => (
-      // console.log(`successfully retrieved features with id:${id}`);
-      featureData.rows
-    ))
+    .then((featureData) => featureData.rows)
     .catch((err) => console.log('error in DB: ', err))
 );
 
-const findProductFeatureById = (id) => (
+const OneQueryFindProductById = (id) => (
   promisedClient
     .query(`
       SELECT p.*,
@@ -47,38 +39,29 @@ const findProductFeatureById = (id) => (
         WHERE p.id = ${id}
         GROUP BY p.id
       ;`)
-    .then((productData) => (
-      productData.rows[0]
-    ))
+    .then((productData) => productData.rows[0])
     .catch((err) => console.log('error in DB: ', err))
 );
 
 const findStylesById = (id) => (
   promisedClient
     .query(`SELECT * FROM style WHERE productId = ${id}`)
-    .then((styleData) => (
-      // console.log(`successfully retrieved styles with id:${id}`);
-      styleData.rows
-    ))
+    .then((styleData) => styleData.rows)
     .catch((err) => console.log('error in DB: ', err))
 );
 
 const findPhotosByStyleid = (styleId) => (
   promisedClient
     .query(`SELECT * FROM photo WHERE styleid = ${styleId}`)
-    .then((photoData) => (
-      // console.log(`successfully retrieved photos for Style: ${styleId}`);
-      photoData.rows
-    ))
+    .then((photoData) => photoData.rows)
+    .catch((err) => console.log(err))
 );
 
 const findSkusByStyleid = (styleId) => (
   promisedClient
     .query(`SELECT * FROM sku WHERE styleid = ${styleId}`)
-    .then((skuData) => (
-      // console.log(`successfully retrieved skus for Style: ${styleId}`);
-      skuData.rows
-    ))
+    .then((skuData) => skuData.rows)
+    .catch((err) => console.log(err))
 );
 
 const oneQueryfindStylesById = (productId) => (
@@ -102,9 +85,10 @@ const oneQueryfindStylesById = (productId) => (
           WHERE ph.styleid = s.id),
 
           'skus', (SELECT json_agg(json_build_object(
-            'quantity', sku.quantity,
-            'size', sku.size
-          ))
+              'quantity', sku.quantity,
+              'size', sku.size
+            ))
+
           FROM
             sku
           WHERE sku.styleid = s.id)
@@ -132,7 +116,7 @@ module.exports = {
   findAllProduct,
   findProductById,
   findFeatureById,
-  findProductFeatureById,
+  OneQueryFindProductById,
   findStylesById,
   findPhotosByStyleid,
   findSkusByStyleid,

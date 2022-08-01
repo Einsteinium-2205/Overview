@@ -10,10 +10,10 @@ export const options = {
 };
 
 // ========== url to test 4 endpoints ============
-const url = 'http://localhost:3000/products/';
-// const url = 'http://localhost:3000/products/1229';
-// const url = 'http://localhost:3000/products/12/styles';
-// const url = 'http://localhost:3000/products/6/related';
+// const url = 'http://localhost:3000/products/';
+const url = 'http://localhost:3000/products/12787';
+// const url = 'http://localhost:3000/products/121131/styles';
+// const url = 'http://localhost:3000/products/711/related';
 
 export default function test() {
   const res = http.get(url);

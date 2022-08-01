@@ -2,11 +2,12 @@ const {
   findAllProduct,
   findProductById,
   findFeatureById,
+  findProductFeatureById,
   findStylesById,
   findPhotosByStyleid,
   findSkusByStyleid,
+  oneQueryfindStylesById,
   findRelatedByProductId,
-  findProductFeatureById,
 } = require('../db/queries');
 
 const getAllProduct = (req, res) => {
@@ -40,40 +41,41 @@ const getProductById = (req, res) => {
 const getStyleById = (req, res) => {
   const id = req.url.slice(10, -7);
 
-  findStylesById(id)
-    .then((styleData) => {
-      const styleObj = {};
-      styleObj.product_id = styleData[0].productid;
-      styleObj.results = styleData;
+  // findStylesById(id)
+  //   .then((styleData) => {
+  //     const styleObj = {};
+  //     styleObj.product_id = styleData[0].productid;
+  //     styleObj.results = styleData;
 
-      const photoPromises = styleObj.results.map((style) => {
-        style.photos = null;
-        style.skus = null;
+  //     const photoPromises = styleObj.results.map((style) => {
+  //       style.photos = null;
+  //       style.skus = null;
 
-        return findPhotosByStyleid(style.id)
-          .then((photoData) => {
-            style.photos = photoData;
-          })
-          .catch((err) => console.log(err));
-      });
+  //       return findPhotosByStyleid(style.id)
+  //         .then((photoData) => {
+  //           style.photos = photoData;
+  //         })
+  //         .catch((err) => console.log(err));
+  //     });
 
-      const skuPromises = styleObj.results.map((style) => (
-        findSkusByStyleid(style.id)
-          .then((skuData) => {
-            style.skus = skuData;
-          })
-          .catch((err) => console.log('error in findPhotos: ', err))
-      ));
+  //     const skuPromises = styleObj.results.map((style) => (
+  //       findSkusByStyleid(style.id)
+  //         .then((skuData) => {
+  //           style.skus = skuData;
+  //         })
+  //         .catch((err) => console.log('error in findPhotos: ', err))
+  //     ));
 
-      const addPhotos = Promise.all(photoPromises);
-      const addSkus = Promise.all(skuPromises);
+  //     const addPhotos = Promise.all(photoPromises);
+  //     const addSkus = Promise.all(skuPromises);
 
-      return addPhotos.then(() => (
-        addSkus
-          .then(() => (styleObj))
-          .catch((err) => console.log('err in helpers: ', err))
-      ));
-    })
+  //     return addPhotos.then(() => (
+  //       addSkus
+  //         .then(() => (styleObj))
+  //         .catch((err) => console.log('err in helpers: ', err))
+  //     ));
+  //   })
+  oneQueryfindStylesById(id)
     .then((finalStyleObj) => res.status(200).send(finalStyleObj))
     .catch((err) => {
       res.status(500).send(err);

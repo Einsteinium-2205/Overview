@@ -36,9 +36,6 @@ const findFeatureById = (id) => (
 
 const findProductFeatureById = (id) => (
   promisedClient
-    // .query(`
-    //   SELECT * FROM product_feature WHERE id = ${id}
-    // ;`)
     .query(`
       SELECT p.*,
         json_agg(json_build_object(
@@ -84,6 +81,44 @@ const findSkusByStyleid = (styleId) => (
     ))
 );
 
+const oneQueryfindStylesById = (productId) => (
+  promisedClient
+    .query(`
+      SELECT json_build_object(
+        'product_id', p.id,
+        'results',
+        (SELECT json_agg(json_build_object(
+          'style_id', s.id,
+          'name', s.name,
+          'original_price', s.original_price,
+          'sale_price', s.sale_price,
+          'default?', s.default_style,
+          'photos', (SELECT json_agg(json_build_object(
+            'thumbnail_url', ph.thumbnail_url,
+            'url', ph.url
+          ))
+          FROM
+            photo ph
+          WHERE ph.styleid = s.id),
+
+          'skus', (SELECT json_agg(json_build_object(
+            'quantity', sku.quantity,
+            'size', sku.size
+          ))
+          FROM
+            sku
+          WHERE sku.styleid = s.id)
+        ))
+        FROM
+          style s
+        WHERE s.productid = p.id)
+
+      )FROM product p WHERE p.id = ${productId}
+    `)
+    .then((styleData) => styleData.rows[0].json_build_object)
+    .catch((err) => console.log(err))
+);
+
 const findRelatedByProductId = (id) => (
   promisedClient
     .query(`SELECT * FROM related WHERE current_product_id = ${id}`)
@@ -97,9 +132,10 @@ module.exports = {
   findAllProduct,
   findProductById,
   findFeatureById,
+  findProductFeatureById,
   findStylesById,
   findPhotosByStyleid,
   findSkusByStyleid,
+  oneQueryfindStylesById,
   findRelatedByProductId,
-  findProductFeatureById,
 };

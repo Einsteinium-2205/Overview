@@ -1,7 +1,7 @@
 const {
   findAllProduct,
-  findProductById,
-  findFeatureById,
+  // findProductById,
+  // findFeatureById,
   OneQueryFindProductById,
   // findStylesById,
   // findPhotosByStyleid,

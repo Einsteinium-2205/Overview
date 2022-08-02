@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const {
   getAllProduct,
   getProductById,
@@ -25,7 +26,7 @@ app.get('/products/:id/related', (req, res) => {
   getRelatedById(req, res);
 });
 
-app.get('/loaderio-dcda3a7d6e0d5e8e65910a0251cd5a12', (req, res) => res.sendFile(__dirname + '/loaderio-dcda3a7d6e0d5e8e65910a0251cd5a12.txt'));
+app.get('/loaderio-dcda3a7d6e0d5e8e65910a0251cd5a12', (req, res) => res.sendFile(path.join(__dirname, '/loaderio-dcda3a7d6e0d5e8e65910a0251cd5a12.txt')));
 
 const port = process.env.PORT || 3000;
 app.listen(port);

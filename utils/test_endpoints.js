@@ -11,7 +11,7 @@ export const options = {
 
 // ========== url to test 4 endpoints ============
 // const url = 'http://localhost:3000/products/';
-const url = 'http://localhost:3000/products/12787';
+const url = 'http://localhost:3000/products/1277';
 // const url = 'http://localhost:3000/products/21/styles';
 // const url = 'http://localhost:3000/products/711/related';
 

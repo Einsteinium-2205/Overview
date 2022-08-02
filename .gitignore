@@ -1,5 +1,4 @@
 node_modules
 .env
 db/cleanData.js
-newRelic.js
-newrelic_agent.log
+loaderio.txt
